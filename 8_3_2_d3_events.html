@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <script src ="https://d3js.org/d3.v5.min.js"> </script>
+    <style>
+    .chart rect {fill: steelblue;} 
+    #tooltip {
+        opacity: 0;
+        position: absolute;
+        text-align: center;
+        width: 100px; height: 10px;
+        background: white;
+        border: 0px;
+        
+    }
+    </style>
+    <body>
+        <p>Here are the magic numbers from Lost <span id="data"></span></p>
+        <svg class="chart" width="120" height="500"></svg>
+        <div id="tooltip"></div>
+        
+
+        <script>
+            var tooltip = d3.select("#tooltip");
+            var data = [4,8,15,16,23,42];
+            document.getElementById("data").innerHTML = data;
+            d3.select(".chart").selectAll("rect")
+                                .data(data)
+                                .enter().append("rect")
+                                .attr("width",19)
+                                .attr("x",function(d,i) {return 20*i;})                                
+                                .attr("height", function(d) {return 10*d;})
+                                .attr("y",function(d) {return 420-10*d;})
+                                .on("mouseover", function(d,i) {
+                                    tooltip.style("opacity",1)
+                                           .style("left",(d3.event.pageX)+"px")
+                                           .style("top",(d3.event.pageY)+"px")
+                                           .html("item #"+i+" is "+d);
+                                })
+                                .on("mouseout", function() { tooltip.style("opacity",0)})
+                                .voronoi([0,0,120,500]);             
+
+        </script>        
+        
+
+
+    </body>
+</html>
