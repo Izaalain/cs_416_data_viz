@@ -1,8 +1,28 @@
 <!DOCTYPE html>
 <html>
-    <script> src = "https://d3js.org/d3.v5.min.js"</script>
-    canst dance_data = await d3.csv()
-    <body>
-        
+    <script src = "https://d3js.org/d3.v5.min.js"></script>
+    
+    <body onload="init()">
+        <svg width="300" height="300"></svg>
+        <script>
+            async function init() {
+                //Read the files from github
+                var url_1 = "https://raw.githubusercontent.com/Izaalain/"
+                var url_2 = "cs_416_data_viz/refs/heads/main/dance_styles_genres_data.csv"
+                const dance_data = await d3.csv(url_1 + url_2) 
+
+                //Attempt to plot a scatter
+                d3.select("svg").append("g")
+                                .attr("transform", "translate("+50+","+50+")")
+                                .selectAll("circle")
+                                .data(dance_data)
+                                .enter()
+                                .append("circle")
+                                .attr("cx", function(d,i) {return d.tempo_bpm_;})
+                                .attr("cy", function(d, i) {return d.hardness_ratio;})
+                                .attr("r", function(d,i) {return d;});
+            }
+        </script>        
+
     </body>
 </html>
