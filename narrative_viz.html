@@ -11,6 +11,10 @@
                 var url_2 = "cs_416_data_viz/refs/heads/main/dance_styles_genres_data.csv"
                 const dance_data = await d3.csv(url_1 + url_2) 
 
+                //Set the values for the axis 
+                var xs = d3.scaleLinear().domain([25,250]).range([0,200]);
+                var ys = d3.scaleLinear().domain([0,2]).range([200,0]);
+
                 //Attempt to plot a scatter
                 d3.select("svg").append("g")
                                 .attr("transform", "translate("+50+","+50+")")
@@ -18,9 +22,19 @@
                                 .data(dance_data)
                                 .enter()
                                 .append("circle")
-                                .attr("cx", function(d,i) {return d.tempo_bpm_;})
-                                .attr("cy", function(d, i) {return d.hardness_ratio;})
-                                .attr("r", function(d,i) {return d;});
+                                .attr("cx", function(d,i) {return xs(d.tempo_bpm_);})
+                                .attr("cy", function(d, i) {return ys(d.hardness_ratio);})
+                                .attr("r", function(d,i) {return ;});
+
+                //Re-position the y-axis 
+                d3.select("svg").append("g")
+                                .attr("transform", "translate("+50+","+50+")")
+                                .call(d3.axisLeft(ys).tickValues([0.1,0.5,1.0,1.5,2.0]).tickFormat(d3.format(".1f")));
+
+                //Positioning the x-axis 
+                d3.select("svg").append("g")
+                                .attr("transform", "translate ("+50+","+250+")")
+                                .call(d3.axisBottom(xs).tickValues([25,50,100,150,200,250]).tickFormat(d3.format("~s")));
             }
         </script>        
 
