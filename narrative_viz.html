@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <h2>Slow or Fast Music? Which one is harder to dance to? </h2>
+    <h2> Slow or Fast Music? Which one is harder to dance to? </h2>
+    
     <script src = "https://d3js.org/d3.v5.min.js"></script>
     <style> circle{fill:none; stroke: blue;} </style>      
        
-    <body onload="init('All')"> 
+    <body style="font-family: Open Sans;" onload="init('All dance')"> 
                      
-        <svg width="500" height="500"></svg>
+        <svg width="550" height="500"></svg>
         <div id="tooltip"></div> 
 
         <script>
@@ -21,7 +22,8 @@
                                               .style("border","solid")
                                               .style("border-width","1px")
                                               .style("border-radius", "5px")
-                                              .style("padding","10px");
+                                              .style("padding","10px")
+                                              ;
                                               
 
             //Try repositioning the tooltip            
@@ -35,12 +37,12 @@
                 const dance_data = await d3.csv(url_1 + url_2); 
                
                 //Set the values for the axis 
-                var xs = d3.scaleLinear().domain([50,250]).range([20,420]);
-                var ys = d3.scaleLinear().domain([0.4,2]).range([420,20]);
+                var xs = d3.scaleLinear().domain([50,250]).range([100,500]);
+                var ys = d3.scaleLinear().domain([0.4,2]).range([400,0]);
                 
                 //Re-position the y-axis 
                 d3.select("svg").append("g")
-                                .attr("transform", "translate("+50+","+50+")")
+                                .attr("transform", "translate("+120+","+50+")")
                                 .call(d3.axisLeft(ys)
                                 .tickValues([0.4,0.5,1.0,1.5,2.0])
                                 .tickFormat(d3.format(".1f")))
@@ -49,7 +51,7 @@
                  
                 //Positioning the x-axis 
                 d3.select("svg").append("g")
-                                .attr("transform", "translate ("+50+","+450+")")
+                                .attr("transform", "translate ("+20+","+450+")")
                                 .call(d3.axisBottom(xs)
                                 .tickValues([50,75,100,125,150,175,200,225,250])
                                 .tickFormat(d3.format("~s")))
@@ -57,7 +59,7 @@
                 
                 //Set the x-axis label
                 d3.select("svg").append("text")
-                                .attr("transform","translate("+100+","+475+")")
+                                .attr("transform","translate("+150+","+475+")")
                                 .style("text-achor","bottom")
                                 .style("font-size","20px")
                                 .style("fill", "black")
@@ -66,11 +68,11 @@
 
                 //Set the y-axis label
                 d3.select("svg").append("text")                                
-                                .attr("transform","translate("+0+","+300+") rotate(-90)")
+                                .attr("transform","translate("+50+","+350+") rotate(-90)")
                                 .style("text-achor","bottom")
                                 .style("font-size","20px")
                                 .style("fill", "black")
-                                .attr("dx", "1em")                               
+                                .attr("dy", "1em")                               
                                 .text("Dancing hardness ratio");
 
                 //Add the heading for each of the dance types 
@@ -83,7 +85,7 @@
                                 .text(dance + " styles");
                  
                 //Account for all the dances 
-                if (dance === 'All'){
+                if (dance === 'All dance'){
                     specific_dance_data = dance_data;
                } 
                else{               
@@ -93,28 +95,67 @@
                 
                //Attempt to plot a scatter
                 d3.select("svg").append("g")
-                                .attr("transform", "translate("+50+","+50+")")
+                                .attr("transform", "translate("+20+","+50+")")
                                 .selectAll("circle")
                                 .data(specific_dance_data)
                                 .enter()
                                 .append("circle")
-                                //.transition().duration(450)
+                                //.transition().duration(1000)
                                 .attr("cx", function(d,i) {return xs(d.tempo_bpm_);})
                                 .attr("cy", function(d, i) {return ys(d.hardness_ratio);})
-                                .attr("r", function(d,i) {return 8;})
-                                .attr("html", "test html")
+                                .attr("r", function(d,i) {return 5;})                                
                                 .on("mouseover", function(d) {
                                     tooltip.style("opacity",1)
                                             .style("left",(d3.event.pageX)+"px")
                                             .style("top",(d3.event.pageY)+"px")                                      
                                             .html("Dance style: " +d.dance_style + "<br />Origin: " +d.origin);
-                                    tooltip.transition().delay(1000)
-                                })
+                                                                    })
                                 .on("mouseout", function(d) { tooltip.style("opacity",0)});                                             
                 
-                                //Specify dance type
-                           
-            }                    
+                //Add an annotation to each scene for proper messaging  
+                var annote_one = d3.select("body").append("div")
+                                              .style("opacity",0)
+                                              .attr("id","tooltip")
+                                              .style("position", "absolute")
+                                              .style("width", "150px")
+                                              .style("height","100px")
+                                              .style("background-color","#ffdbbb")
+                                              .style("border","solid")
+                                              .style("border-width","1px")
+                                              .style("border-radius", "15px")
+                                              .style("padding","10px")
+
+                //Customize the annotation for the graph
+                var annote_message =  annote_one.style("opacity",1)
+                                .style("left",500+"px")
+                                .style("top",100+"px")                        
+                                .html("There seems to be" + 
+                                    "<br> no correlation between" + 
+                                    "<br />dancing hardness ratio"+ 
+                                    "<br />and music tempo in "+ dance + " styles");  
+                
+                //tell the viewer about the buttons 
+                var annote_button = d3.select("body").append("div")
+                                              .style("opacity",0)
+                                              .attr("id","tooltip")
+                                              .style("position", "absolute")
+                                              .style("width", "150px")
+                                              .style("height","30px")
+                                              .style("background-color","#add8e6")
+                                              .style("border","solid")
+                                              .style("border-width","1px")
+                                              .style("border-radius", "5px")
+                                              .style("padding","10px");
+
+
+                annote_button.style("opacity",1)
+                                .style("left",730+"px")
+                                .style("top",100+"px")                       
+                                .html("Select one of the dance styles below to explore"); 
+                                    
+            
+            }              
+            
             </script>  
                          
 
@@ -143,18 +184,18 @@
             //Reposition the triggers (dance styles)  
              const button_one =   document.getElementById("button1")
              button_one.style.position = "absolute";
-             button_one.style.top = "150px";
-             button_one.style.left = "600px";
+             button_one.style.top = "160px";
+             button_one.style.left = "750px";
              button_one.style.display = "flex";
              button_one.style.flexDirection = "column";
              button_one.style.gap= "5px";
-             button_one.style.backgroundColor= "yellow";
+             button_one.style.backgroundColor= "black";
              button_one.style.color= "blue";
 
             //Clear the screen again and add the all button
             function all_func(){
                 d3.select("svg").text("");
-                init("All");
+                init("All dance");
                 }
 
             //Clear the screen again and add the American button
